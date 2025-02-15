@@ -40,7 +40,7 @@ git clone https://github.com/Hiren-Karwani/Homemade-Harmony.git
 cd tiffin-service
 ```
 #### **2️⃣ Setup Database**
-- Import the `database.sql` file into **phpMyAdmin**.  
+- Import the `database.sql` file into **phpMyAdmin** with database name **tiffin_service**.  
 - Update `php/config.php` with your database credentials.  
 
 #### **3️⃣ Start Local Server**
