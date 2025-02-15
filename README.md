@@ -62,7 +62,7 @@ Feel free to **fork** this repo, suggest improvements, or submit pull requests!
 ---
 
 ### **📞 Contact**
-For any queries or collaborations, contact me at ***karwanih7@gmail.com**.  
+For any queries or collaborations, contact me at **karwanih7@gmail.com**.  
 
 ---
 
