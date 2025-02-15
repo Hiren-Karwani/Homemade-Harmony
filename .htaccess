@@ -1,0 +1,17 @@
+# Disable Directory Listing
+Options -Indexes
+
+# Enable URL Rewriting
+RewriteEngine On
+
+# Allow access to these pages without login
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/login.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/register.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/php/ [NC]
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ [NC]
+
+# Redirect non-logged-in users if no session or cookie is found
+RewriteCond %{HTTP_COOKIE} !user
+RewriteCond %{HTTP_COOKIE} !PHPSESSID
+RewriteRule .* login.php [L,NC]
