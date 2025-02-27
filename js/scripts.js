@@ -78,3 +78,21 @@ function searchProducts() {
         })
         .catch((error) => console.error("Search Error:", error));
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ Event Delegation for "Order Now" Button
+    document.body.addEventListener("click", function (event) {
+        if (event.target.classList.contains("order-now")) {
+            let scheduleId = event.target.getAttribute("data-id");
+
+            fetch("php/order_tiffin.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "schedule_id=" + scheduleId,
+            })
+            .then((response) => response.text())
+            .then((data) => alert(data)) // Show response as alert
+            .catch((error) => console.error("Order Error:", error));
+        }
+    });
+});

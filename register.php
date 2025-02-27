@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = md5($_POST['password']);
+    $address = $_POST['address'];
 
     // Check if user already exists
     $check_user = $conn->query("SELECT * FROM users WHERE username='$username' OR email='$email'");
@@ -15,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($check_user->num_rows > 0) {
         $error_message = "Username or email already taken!";
     } else {
-        $conn->query("INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')");
+        $conn->query("INSERT INTO users (username, email, password, address) VALUES ('$username', '$email', '$password', '$address')");
         $_SESSION['user'] = $username;
         header("Location: index.php");
         exit();
@@ -44,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="username" placeholder="Username" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="address" placeholder="Flat no/Floor/Street Name/Area/City" required>
         <button type="submit">Register</button>
         <p style="display: inline;">Already have an account? <a href="login.php" style="display: inline; padding-top: 10px">Login</a></p>
     </form>

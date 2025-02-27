@@ -1,0 +1,13 @@
+home page
+1 week schedule calendar
+order timing and date
+easily adjustable quantity
+admin login
+admin dashboard
+admin can add items directly from website
+contact us/feedback form
+add navbar in cart,checkout,login,register pages
+add address in register page
+add payment api
+add filters 
+show pending orders and statistics in admin dashboard

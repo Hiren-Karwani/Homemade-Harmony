@@ -27,7 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_order'])) {
 <body>
 
 <header>
-    <h1>Checkout</h1>
+    <nav class="navbar">
+        <a href="#" class="website-name">Homemade Harmony</a>
+        <div class="nav-links">
+            <a href="index.php">Home</a>
+            <a href="index.php">Schedule</a>
+            <a href="cart.php">Cart</a>
+            <a href="checkout.php">Checkout</a>
+            <a href="logout.php">Logout</a>
+        </div>
+    </nav>
 </header>
 
 <div class="checkout-container">

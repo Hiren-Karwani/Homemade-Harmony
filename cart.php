@@ -23,7 +23,17 @@ $total_price = 0;
 <body>
 
 <header>
-    <h1>Your Cart</h1>
+<!-- <h1>Your Cart</h1> -->
+    <nav class="navbar">
+        <a href="#" class="website-name">Homemade Harmony</a>
+        <div class="nav-links">
+            <a href="index.php">Home</a>
+            <a href="index.php">Schedule</a>
+            <a href="cart.php">Cart</a>
+            <a href="checkout.php">Checkout</a>
+            <a href="logout.php">Logout</a>
+        </div>
+    </nav>
 </header>
 
 <div class="cart-container">

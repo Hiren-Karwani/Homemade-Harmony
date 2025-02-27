@@ -19,6 +19,7 @@ include 'php/auth_check.php'; // Ensure this file exists in the "php/" folder
         <a href="#" class="website-name">Homemade Harmony</a>
         <div class="nav-links">
             <a href="index.php">Home</a>
+            <a href="schedule.php">Schedule</a>
             <a href="cart.php">Cart</a>
             <a href="checkout.php">Checkout</a>
             <a href="logout.php">Logout</a>

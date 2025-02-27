@@ -1,0 +1,93 @@
+body {
+    background: linear-gradient(to bottom right, #2E8BC0, #29C7AC);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.auth-wrapper {
+    width: 350px;
+    text-align: center;
+}
+
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    background: #ddd;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+}
+
+.tab-button.active {
+    background: #fff;
+    color: #005f73;
+}
+
+.auth-container {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.auth-container h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #005f73;
+    margin-bottom: 20px;
+}
+
+.auth-container form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.auth-container form button {
+    width: 100%;
+    padding: 12px;
+    background: #023e8a;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-container form button:hover {
+    background: #0077b6;
+}
+
+.auth-container a {
+    display: block;
+    margin-top: 15px;
+    color: #023e8a;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
