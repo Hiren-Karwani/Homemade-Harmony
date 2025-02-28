@@ -51,6 +51,73 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => console.error("Remove from Cart Error:", error));
         }
     });
+
+    // ✅ Schedule Later: Set Minimum Date and Time for Checkout
+    const dateInputCheckout = document.getElementById("delivery_date");
+    const timeInputCheckout = document.getElementById("delivery_time");
+    if (dateInputCheckout && timeInputCheckout) {
+        const today = new Date().toISOString().split("T")[0];
+        dateInputCheckout.setAttribute("min", today);
+
+        // Adjust time based on today's date selection
+        dateInputCheckout.addEventListener("change", function () {
+            const selectedDate = new Date(dateInputCheckout.value);
+            const now = new Date();
+            if (selectedDate.toDateString() === now.toDateString()) {
+                const currentTime = now.toTimeString().slice(0, 5); // e.g., "14:30"
+                timeInputCheckout.setAttribute("min", currentTime);
+            } else {
+                timeInputCheckout.setAttribute("min", "09:00"); // Reset to default business hours
+            }
+        });
+    }
+
+    // ✅ Event Delegation for "Order Now" Button in Schedule
+    document.body.addEventListener("click", function (event) {
+        if (event.target.classList.contains("order-now")) {
+            const scheduleId = event.target.getAttribute("data-id");
+            const form = document.getElementById(`form-${scheduleId}`);
+
+            // Toggle form visibility
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    });
+
+    // ✅ Schedule Later: Set Minimum Date for Schedule Forms
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        const today = new Date().toISOString().split("T")[0];
+        input.setAttribute("min", today);
+
+        // Adjust time dynamically based on date selection
+        input.addEventListener("change", function () {
+            const form = input.closest(".schedule-form");
+            const timeInput = form.querySelector('input[type="time"]');
+            const selectedDate = new Date(input.value);
+            const now = new Date();
+
+            if (selectedDate.toDateString() === now.toDateString()) {
+                const currentTime = now.toTimeString().slice(0, 5); // e.g., "14:30"
+                timeInput.setAttribute("min", currentTime);
+            } else {
+                timeInput.setAttribute("min", "09:00"); // Reset to default
+            }
+        });
+    });
+
+    // ✅ Schedule Form Submission Validation
+    document.querySelectorAll(".schedule-form").forEach(form => {
+        form.addEventListener("submit", function (event) {
+            const dateInput = form.querySelector('input[type="date"]');
+            const timeInput = form.querySelector('input[type="time"]');
+            const selectedDateTime = new Date(`${dateInput.value} ${timeInput.value}`);
+            const now = new Date();
+
+            if (selectedDateTime <= now) {
+                event.preventDefault(); // Prevent form submission
+                alert("Please select a future date and time!");
+            }
+        });
+    });
 });
 
 // 🔍 **Search Function to Fetch and Display Results**
@@ -78,21 +145,3 @@ function searchProducts() {
         })
         .catch((error) => console.error("Search Error:", error));
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    // ✅ Event Delegation for "Order Now" Button
-    document.body.addEventListener("click", function (event) {
-        if (event.target.classList.contains("order-now")) {
-            let scheduleId = event.target.getAttribute("data-id");
-
-            fetch("php/order_tiffin.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: "schedule_id=" + scheduleId,
-            })
-            .then((response) => response.text())
-            .then((data) => alert(data)) // Show response as alert
-            .catch((error) => console.error("Order Error:", error));
-        }
-    });
-});

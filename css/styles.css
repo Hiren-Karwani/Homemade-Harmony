@@ -71,7 +71,6 @@ header {
     }
 }
 
-
 /* Search Bar */
 .search-container {
     display: flex;
@@ -163,7 +162,6 @@ header {
     color: #ff4d4d;
     margin-top: 20px;
 }
-
 
 /* Product Grid */
 .products {
@@ -283,7 +281,7 @@ header {
     margin-top: 20px;
 }
 
-/* 📅 Schedule Container */
+/* 🗓 Schedule Container */
 .schedule-container {
     width: 90%;
     max-width: 800px;
@@ -365,7 +363,43 @@ header {
     color: #333;
 }
 
-/* 📱 Responsive Design */
+/* 📅 Schedule Form (Added for schedule.php) */
+.schedule-form {
+    margin-top: 10px;
+}
+
+.schedule-form label {
+    display: block;
+    margin: 5px 0;
+    color: #1565c0;
+    font-size: 14px;
+}
+
+.schedule-form input {
+    padding: 5px;
+    width: 100%;
+    max-width: 150px;
+    margin-bottom: 5px;
+    border: 2px solid #1976d2;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.schedule-form button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.schedule-form button:hover {
+    background-color: #218838;
+}
+
+/* 📱 Responsive Design for Schedule */
 @media (max-width: 768px) {
     .schedule-container {
         width: 95%;
@@ -381,9 +415,11 @@ header {
         padding: 8px 12px;
         font-size: 14px;
     }
+
+    .schedule-form input {
+        max-width: 120px;
+    }
 }
-
-
 
 /* 🔹 Popup Notification */
 #popup-message {
@@ -441,6 +477,33 @@ header {
     margin-top: 10px;
 }
 
+/* 📅 Schedule Section (Added for checkout.php) */
+.schedule-section {
+    margin: 20px 0;
+}
+
+.schedule-section h3 {
+    color: #1565c0;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.schedule-section label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
+    font-size: 16px;
+}
+
+.schedule-section input {
+    padding: 8px;
+    width: 100%;
+    max-width: 200px;
+    border: 2px solid #1976d2;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
 /* 🔹 Confirm Order Button */
 #confirm-order {
     background: #1976d2;
@@ -473,6 +536,16 @@ header {
     color: #d32f2f;
 }
 
+/* 🔹 Error Message */
+.error-message {
+    color: red;
+    background: #ffebee;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .products {
@@ -503,6 +576,10 @@ header {
     #confirm-order {
         font-size: 16px;
         padding: 10px 15px;
+    }
+
+    .schedule-section input {
+        max-width: 150px;
     }
 }
 
@@ -581,7 +658,6 @@ header {
     text-decoration: underline;
 }
 
-
 .auth-container a {
     display: block;
     margin-top: 10px;
@@ -597,15 +673,4 @@ header {
 p {
     display: inline-block;
     white-space: nowrap;
-}
-
-
-/* 🔹 Error Message */
-.error-message {
-    color: red;
-    background: #ffebee;
-    padding: 8px;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-weight: bold;
 }

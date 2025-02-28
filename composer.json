@@ -1,0 +1,6 @@
+{
+    "name": "karwa/homemade-harmony",
+    "require": {
+        "razorpay/razorpay": "^2.9"
+    }
+}

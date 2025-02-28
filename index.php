@@ -23,11 +23,18 @@ include 'php/auth_check.php'; // Ensure this file exists in the "php/" folder
             <a href="cart.php">Cart</a>
             <a href="checkout.php">Checkout</a>
             <a href="logout.php">Logout</a>
-            <input type="text" id="search-bar" placeholder="Search for items...">
-            <button class="search-button" onclick="searchProducts()">Search</button>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search for items...">
+                <button class="search-button" onclick="searchProducts()">Search</button>
+            </div>
         </div>
     </nav>
 </header>
+
+<!-- 📅 Promotional Banner for Schedule Later -->
+<div class="promo-banner">
+    <p>🍱 Now you can schedule your tiffin for later! Check out our <a href="schedule.php">Weekly Schedule</a> or add to cart and pick a time at checkout!</p>
+</div>
 
 <!-- 🔍 Search Results Section -->
 <div id="search-results" class="search-results"></div>
