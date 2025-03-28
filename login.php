@@ -14,8 +14,10 @@ session_start();
 <div class="auth-wrapper">
     <div class="auth-container">
         <h2>Select Login Type</h2>
-        <button onclick="location.href='user_login.php'">User Login</button>
-        <button onclick="location.href='admin_login.php'">Admin Login</button>
+        <div class="button-group">
+            <button class="login-btn user" onclick="location.href='user_login.php'">User Login</button>
+            <button class="login-btn admin" onclick="location.href='admin_login.php'">Admin Login</button>
+        </div>
     </div>
 </div>
 
