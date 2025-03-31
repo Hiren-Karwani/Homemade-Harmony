@@ -8,17 +8,30 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-// Fetch pending orders
-$pending_orders = $conn->query("SELECT * FROM orders WHERE status='pending'");
+// Fetch pending orders with user details
+$pending_orders = $conn->query("
+    SELECT orders.id, users.username, users.address, orders.status 
+    FROM orders 
+    JOIN users ON orders.user_id = users.id 
+    WHERE orders.status = 'pending'
+");
 
-// Fetch rejected or pending requested orders
-$requested_orders = $conn->query("SELECT * FROM orders WHERE status IN ('pending', 'rejected')");
+// Fetch rejected or pending requested orders with user details
+$requested_orders = $conn->query("
+    SELECT orders.id, users.username, users.address, orders.status 
+    FROM orders 
+    JOIN users ON orders.user_id = users.id 
+    WHERE orders.status IN ('pending', 'cancelled')
+");
 
 // Fetch products
 $products = $conn->query("SELECT * FROM products");
 
 // Fetch schedule
 $schedule = $conn->query("SELECT * FROM schedule");
+
+// Fetch completed orders with dates
+$completed_orders = $conn->query("SELECT orders.id, users.username, users.address, orders.status, orders.order_date FROM orders JOIN users ON orders.user_id = users.id WHERE orders.status = 'completed'");
 
 // Handle product addition
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_product'])) {
@@ -109,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_schedule'])) {
                             <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
                             <select name="new_status">
                                 <option value="completed">Complete</option>
-                                <option value="rejected">Reject</option>
+                                <option value="cancelled">Reject</option>
                             </select>
                             <button type="submit" name="update_order_status">Update</button>
                         </form>
@@ -135,6 +148,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_schedule'])) {
                     <td><?= htmlspecialchars($order['username']) ?></td>
                     <td><?= htmlspecialchars($order['address']) ?></td>
                     <td><?= htmlspecialchars($order['status']) ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </table>
+    </section>
+
+    <!-- Completed Orders Section -->
+    <section>
+        <h2>Completed Orders</h2>
+        <table>
+            <tr><th>Order ID</th><th>Username</th><th>Address</th><th>Status</th><th>Completion Date</th></tr>
+            <?php while ($order = $completed_orders->fetch_assoc()) : ?>
+                <tr>
+                    <td><?= htmlspecialchars($order['id']) ?></td>
+                    <td><?= htmlspecialchars($order['username']) ?></td>
+                    <td><?= htmlspecialchars($order['address']) ?></td>
+                    <td><?= htmlspecialchars($order['status']) ?></td>
+                    <td><?= htmlspecialchars($order['order_date']) ?></td>
                 </tr>
             <?php endwhile; ?>
         </table>

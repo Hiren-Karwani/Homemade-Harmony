@@ -1,15 +1,10 @@
 <?php
 session_start();
 include 'php/config.php';
-include 'php/auth_check.php'; // Ensure this file exists
+include 'php/auth_check.php';
 
 // Check if the cart is empty
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    $cart_empty = true;
-} else {
-    $cart_empty = false;
-}
-
+$cart_empty = !isset($_SESSION['cart']) || empty($_SESSION['cart']);
 $total_price = 0;
 ?>
 
@@ -55,18 +50,20 @@ $total_price = 0;
                     $item_total = $row['price'] * (int)$quantity;
                     $total_price += $item_total;
                 ?>
-                    <li class="cart-item">
+                    
     <div class="cart-item-details">
         <p><strong><?= htmlspecialchars($row['name']); ?></strong></p>
-        <p>₹<?= number_format($row['price'], 2); ?> × <?= (int)$quantity; ?> = ₹<?= number_format($item_total, 2); ?></p>
+        <p>₹<?= number_format($row['price'], 2); ?> × 
+            <input type="number" class="quantity-input" data-id="<?= $id; ?>" value="<?= (int)$quantity; ?>" min="1">
+            = ₹<span class="item-total" data-id="<?= $id; ?>"><?= number_format($item_total, 2); ?></span>
+        </p>
         <button class="remove-from-cart" data-id="<?= $id; ?>">Remove</button>
     </div>
-</li>
-
+    </li>
                 <?php endif; endforeach; ?>
         </ul>
 
-        <h3>Total Price: ₹<?= number_format($total_price, 2); ?></h3>
+        <h3>Total Price: ₹<span id="total-price"><?= number_format($total_price, 2); ?></span></h3>
         <button onclick="window.location.href='checkout.php'">Proceed to Checkout</button>
     <?php endif; ?>
 </div>
@@ -76,27 +73,36 @@ $total_price = 0;
 
 <script src="js/scripts.js"></script>
 <script>
-document.querySelectorAll(".remove-from-cart").forEach(button => {
-    button.addEventListener("click", function() {
+document.querySelectorAll(".quantity-input").forEach(input => {
+    input.addEventListener("change", function () {
         let productId = this.getAttribute("data-id");
+        let newQuantity = parseInt(this.value);
 
-        fetch("php/remove_from_cart.php", {
+        if (isNaN(newQuantity) || newQuantity < 1) {
+            this.value = 1; // Prevents invalid values
+            newQuantity = 1;
+        }
+
+        fetch("php/update_cart.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "product_id=" + productId
+            body: `product_id=${productId}&quantity=${newQuantity}`
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            document.getElementById("popup-message").style.display = "block";
-            setTimeout(() => {
-                document.getElementById("popup-message").style.opacity = "0";
-                setTimeout(() => {
-                    window.location.reload();
-                }, 500);
-            }, 1000);
+            if (data.success) {
+                document.querySelector(`.item-total[data-id="${productId}"]`).innerText = `${data.new_item_total}`;
+                document.querySelector(".checkout-total").innerText = `Total: ${data.total_price}`;
+            } else {
+                alert("Error updating cart: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
         });
     });
 });
+
 </script>
 
 </body>

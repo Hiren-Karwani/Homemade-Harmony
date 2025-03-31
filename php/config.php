@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "tiffin_service";
+$dbname = "tiffins";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
