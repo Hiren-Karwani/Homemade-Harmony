@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2025 at 04:04 PM
+-- Generation Time: Mar 31, 2025 at 02:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tiffin_service`
+-- Database: `tiffins`
 --
 
 -- --------------------------------------------------------
@@ -33,6 +33,13 @@ CREATE TABLE `admins` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`id`, `username`, `password`) VALUES
+(1, 'Hiren', '202cb962ac59075b964b07152d234b70');
+
 -- --------------------------------------------------------
 
 --
@@ -43,8 +50,22 @@ CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `schedule_id` int(11) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('pending','confirmed','completed','cancelled') DEFAULT 'pending',
+  `total_amount` decimal(10,2) NOT NULL,
+  `payment_method` enum('COD','UPI','Card') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `schedule_id`, `order_date`, `status`, `total_amount`, `payment_method`) VALUES
+(1, 1, 2, '2024-03-25 05:00:00', 'completed', 170.00, 'Card'),
+(2, 2, 1, '2024-03-26 07:15:00', 'completed', 170.00, 'UPI'),
+(3, 3, 4, '2024-03-27 09:30:00', 'cancelled', 170.00, 'COD'),
+(4, 4, 3, '2024-03-20 03:50:00', 'completed', 170.00, 'UPI'),
+(5, 5, 5, '2024-03-22 08:45:00', 'cancelled', 170.00, 'COD');
 
 -- --------------------------------------------------------
 
@@ -121,7 +142,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `address`) VALUES
-(1, 'Hiren', '2021.hiren.karwani@ves.ac.in', '202cb962ac59075b964b07152d234b70', NULL);
+(1, 'Hiren', '2021.hiren.karwani@ves.ac.in', '202cb962ac59075b964b07152d234b70', 'kurla'),
+(2, 'jane_smith', 'jane@example.com', 'hashed_password_2', 'Bandra East, Mumbai'),
+(3, 'alice_wonder', 'alice@example.com', 'hashed_password_3', 'Dadar, Mumbai'),
+(4, 'bob_marley', 'bob@example.com', 'hashed_password_4', 'Colaba, Mumbai'),
+(5, 'charlie_brown', 'charlie@example.com', 'hashed_password_5', 'Goregaon East, Mumbai'),
+(6, 'john_doe', 'john@example.com', 'hashed_password_1', 'Andheri West, Mumbai');
 
 --
 -- Indexes for dumped tables
@@ -170,13 +196,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -194,7 +220,7 @@ ALTER TABLE `schedule`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -204,6 +230,8 @@ ALTER TABLE `users`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
+  ADD CONSTRAINT `fk_orders_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`),
+  ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`);
 COMMIT;
