@@ -118,14 +118,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_schedule'])) {
                     <td><?= htmlspecialchars($order['address']) ?></td>
                     <td><?= htmlspecialchars($order['status']) ?></td>
                     <td>
-                        <form method="post">
-                            <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
-                            <select name="new_status">
-                                <option value="completed">Complete</option>
-                                <option value="cancelled">Reject</option>
-                            </select>
-                            <button type="submit" name="update_order_status">Update</button>
-                        </form>
+                    <form method="post" action="send_otp.php">
+    <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+    <select name="new_status" onchange="checkStatus(this, <?= $order['id'] ?>)">
+        <option value="completed">Complete</option>
+        <option value="cancelled">Reject</option>
+    </select>
+    <button type="submit" name="update_order_status">Update</button>
+</form>
+
+<script>
+function checkStatus(select, orderId) {
+    if (select.value === "completed") {
+        window.location.href = "send_otp.php?order_id=" + orderId;
+    }
+}
+</script>
                     </td>
                 </tr>
             <?php endwhile; ?>
