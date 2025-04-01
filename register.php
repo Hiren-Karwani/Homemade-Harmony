@@ -8,10 +8,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $email = trim($_POST['email']);
     $address = trim($_POST['address']);
     $phone = trim($_POST['phone']);
 
-    if (empty($username) || empty($password) || empty($confirm_password) || empty($address) || empty($phone)) {
+    if (empty($username) || empty($password) || empty($confirm_password) || empty($email) || empty($address) || empty($phone)) {
         $error_message = "All fields are required!";
     } elseif (!preg_match('/^[0-9]{10}$/', $phone)) {
         $error_message = "Phone number must be exactly 10 digits!";
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $hashed_password = md5($password);
             
             // Insert new user
-            $insert = $conn->query("INSERT INTO users (username, password, address, phone) VALUES ('$username', '$hashed_password', '$address', '$phone')");
+            $insert = $conn->query("INSERT INTO users (username, password, email, address, phone) VALUES ('$username', '$hashed_password', '$email', '$address', '$phone')");
 
             if ($insert) {
                 // Redirect to login page after successful registration
@@ -63,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <input type="text" name="email" placeholder="Email" required>
             <input type="text" name="address" placeholder="Address" required>
             <input type="text" name="phone" placeholder="Phone Number" required pattern="[0-9]{10}" title="Enter exactly 10 digits">
             <button type="submit">Register</button>
