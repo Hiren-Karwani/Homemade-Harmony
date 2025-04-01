@@ -1,16 +1,24 @@
 <?php
-session_start();
-include 'php/config.php';
-include 'php/auth_check.php';
+// ✅ Start session and check login status
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require 'vendor/autoload.php'; // Ensure Razorpay SDK is installed
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+include 'php/config.php';
+require 'vendor/autoload.php'; // Razorpay SDK
 use Razorpay\Api\Api;
 
-$api_key = "rzp_test_V6IqZqJ3GFv3LN"; // Replace with your Razorpay Key ID
-$api_secret = "ozAbr21dHsKITZOApJdd7Mz8"; // Replace with your Razorpay Key Secret
+$api_key = "rzp_test_V6IqZqJ3GFv3LN"; 
+$api_secret = "ozAbr21dHsKITZOApJdd7Mz8";
 $api = new Api($api_key, $api_secret);
 
 $subtotal = 0;
+$user = $_SESSION['user']; // ✅ Using updated session variable
 
 // ✅ Ensure cart exists
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
@@ -21,7 +29,7 @@ if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
 
 // ✅ Calculate subtotal
 foreach ($_SESSION['cart'] as $product_id => $quantity) {
-    if ($quantity < 1) {
+    if ($quantity < 0) {
         $_SESSION['checkout_error'] = "Invalid cart items. Please update your cart.";
         header("Location: cart.php");
         exit;
@@ -50,20 +58,6 @@ $tax = round($subtotal * 0.05, 2); // 5% GST
 $delivery_charge = 30; // Fixed delivery charge
 $grand_total = $subtotal + $tax + $delivery_charge;
 
-try {
-    // ✅ Create Razorpay Order
-    $orderData = [
-        'receipt'         => 'order_' . time(),
-        'amount'          => $grand_total * 100, // Convert ₹ to paise
-        'currency'        => 'INR',
-        'payment_capture' => 1 // Auto capture
-    ];
-
-    $razorpayOrder = $api->order->create($orderData);
-    $razorpayOrderId = $razorpayOrder['id'];
-} catch (Exception $e) {
-    die("<h3 style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</h3>");
-}
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +76,6 @@ try {
         <a href="#" class="website-name">Homemade Harmony</a>
         <div class="nav-links">
             <a href="index.php">Home</a>
-            <a href="schedule.php">Schedule</a>
             <a href="cart.php">Cart</a>
             <a href="checkout.php">Checkout</a>
             <a href="logout.php">Logout</a>
@@ -125,17 +118,16 @@ try {
         </div>
 
         <button id="pay-now">Pay Now</button>
+        <button id="pay-later">Cash On Delivery</button>
 
         <script>
             var options = {
                 "key": "<?= $api_key ?>",
-                "amount": "<?= $grand_total * 100 ?>", // Amount in paisa
+                "amount": "<?= $grand_total * 100 ?>",
                 "currency": "INR",
                 "name": "Homemade Harmony",
                 "description": "Order Payment",
-                "order_id": "<?= $razorpayOrderId ?>",
                 "handler": function (response) {
-                    // ✅ Redirect to success page with payment ID
                     window.location.href = "payment_success.php?payment_id=" + response.razorpay_payment_id;
                 },
                 "theme": {
@@ -148,7 +140,39 @@ try {
                 rzp1.open();
                 e.preventDefault();
             };
+
+            // ✅ Pay Later (Cash on Delivery)
+            document.getElementById('pay-later').addEventListener('click', function () {
+    fetch('insert_order.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',  // ✅ Ensures session is sent
+        body: JSON.stringify({
+            user: "<?= $_SESSION['user'] ?>",
+            schedule_id: 1,
+            total_amount: <?= $grand_total ?>,
+            payment_method: "COD"
+        })
+    })
+    .then(response => response.text()) // ✅ Read response as text to catch errors
+    .then(text => {
+        console.log("Raw response:", text);  // ✅ Check actual response
+        try {
+            let data = JSON.parse(text);
+            if (data.success) {
+                window.location.href = "index.php";
+            } else {
+                alert("Error placing order: " + data.message);
+            }
+        } catch (error) {
+            console.error("JSON Parsing Error:", error);
+            alert("Unexpected error. Check console for details.");
+        }
+    })
+    .catch(error => console.error("Network error:", error));
+});
         </script>
+
     <?php else: ?>
         <p class="empty-cart">Your cart is empty.</p>
     <?php endif; ?>
